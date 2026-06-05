@@ -170,6 +170,7 @@ Polanyi's paradox: most operational knowledge is tacit and resists explicit desc
 ### Token budgets
 
 - **~100 tokens per description** — loaded at startup for all skills
+- **≤ 1,000 characters per description** — hard limit; keep descriptions focused and scannable
 - **< 5.000 tokens per SKILL.md** (spec recommendation) — keep focused on essentials
 - **< 2.500 tokens per SKILL.md** (project recommendation)
 - **< 500 lines per SKILL.md** — move detailed reference material to `references/`
@@ -552,6 +553,8 @@ Before starting any task, propose a branch name and ask the developer to confirm
 
 After making changes, suggest the following as next steps for the developer to run. Do NOT execute these automatically.
 
+> **If the skill's scope changed** (new topic added, topic moved to another skill) **or if a skill was added/removed**: update `skills/golang-how-to/SKILL.md` — the skill loading table and the competing clusters section must reflect the current state of the plugin.
+
 1. ~~Validate against the spec: `skills-ref validate ./skills/{name}`~~ (disabled — [skills-ref doesn't support `user-invocable` yet](https://github.com/agentskills/agentskills/issues/105))
 2. Reformat markdowns with `npx prettier --write *.md "**/*.md"` then lint with `markdownlint-cli2 --config .markdownlint-cli2.jsonc ./` — run before measuring tokens, as formatting changes token counts 2b. Run `SNYK_TOKEN=<token> uvx snyk-agent-scan@latest skills/<name>/` and fix any W011/W012/W001 warnings before proceeding (see [Snyk agent scanner compliance](#snyk-agent-scanner-compliance))
 3. Measure token counts:
@@ -564,6 +567,13 @@ After making changes, suggest the following as next steps for the developer to r
 7. Depending on evaluation final report, suggest improvements and loop
 
 For initial evaluation of skills, use Human-as-Judge.
+
+### After creating a new skill
+
+After writing a new skill body, run the description optimization loop before marking it ready:
+
+1. Verify the description against quality criteria: contains "Golang", has "Use when"/"Apply when" trigger clause with specific scenarios, no broad anti-patterns (`whenever writing Go code`, `Essential for ANY`, `proactively`), FQN cross-refs for competing skills (`samber/cc-skills-golang@<skill>`), library skills use `Apply when the codebase imports github.com/...` pattern. Description must stay ≤ 1,000 characters.
+2. Follow the [After updating a skill](#after-updating-a-skill) checklist.
 
 ### Checking for outdated skills
 

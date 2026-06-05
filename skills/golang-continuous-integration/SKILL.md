@@ -1,12 +1,12 @@
 ---
 name: golang-continuous-integration
-description: "Provides CI/CD pipeline configuration using GitHub Actions for Golang projects. Covers testing, linting, SAST, security scanning, code coverage, Dependabot, Renovate, GoReleaser, code review automation, and release pipelines. Use this whenever setting up CI for a Go project, configuring workflows, adding linters or security scanners, setting up Dependabot or Renovate, automating releases, or improving an existing CI pipeline. Also use when the user wants to add quality gates to their Go project."
+description: "CI/CD pipeline configuration using GitHub Actions for Golang projects — testing, linting, SAST, security scanning, code coverage, Dependabot, Renovate, GoReleaser, code review automation, and release pipelines. Use when setting up or improving Go project CI, configuring GitHub Actions workflows, adding linters or security scanners, automating dependency updates, or adding quality gates."
 user-invocable: true
 license: MIT
 compatibility: Designed for Claude Code or similar AI coding agents, and for projects using Golang.
 metadata:
   author: samber
-  version: "1.2.0"
+  version: "1.3.0"
   openclaw:
     emoji: "🚀"
     homepage: https://github.com/samber/cc-skills-golang
@@ -22,6 +22,9 @@ metadata:
       - kind: brew
         formula: gh
         bins: [gh]
+      - kind: npm
+        package: skills
+        bins: [skills]
 allowed-tools: Read Edit Write Glob Grep Bash(go:*) Bash(golangci-lint:*) Bash(git:*) Agent WebFetch Bash(goreleaser:*) Bash(gh:*) AskUserQuestion
 ---
 
@@ -207,7 +210,7 @@ Key details:
 
 ## Repository Security Settings
 
-After creating workflow files, ALWAYS tell the developer to configure GitHub repository settings (branch protection, workflow permissions, secrets, environments) — see [repo-security.md](./references/repo-security.md)
+Repository security settings (branch protection, workflow permissions, secrets, environments) form the security foundation for the CI pipeline — these are documented in [repo-security.md](./references/repo-security.md).
 
 ---
 
@@ -230,9 +233,9 @@ The workflow runs parallel jobs, each scoped to a set of review areas and priori
 | `security` | Security, Dependencies | Blocking-first |
 | `quality-depth` | Tests, Performance, Observability, Modernize | Mixed |
 
-Depending on your project, also load: `golang-cli`, `golang-context`, `golang-data-structures`, `golang-database`, `golang-dependency-injection`, or any library-specific skill.
+Additional skills that may be relevant depending on the project: `golang-cli`, `golang-context`, `golang-data-structures`, `golang-database`, `golang-dependency-injection`, or any library-specific skill.
 
-Run `/install-github-app` in Claude Code to connect to the Claude API and configure the required secrets.
+The Claude Code GitHub App integration is configured via the `/install-github-app` command, which sets up the required API secrets.
 
 ### GitHub Copilot
 
