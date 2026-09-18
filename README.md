@@ -2,12 +2,18 @@
 
 AI agent skills are reusable instruction sets that extend your coding assistant with domain-specific expertise, loaded on demand so they don't bloat your context. This repository covers **Go-specific** skills only (language, testing, security, observability, etc.); for dev workflow skills (git conventions, CI/CD, PR reviews) you'll want to add a separate skills plugin.
 
-For generic skills, please visit [cc-skills](https://github.com/samber/cc-skills).
+For non-Golang skills, please visit [cc-skills](https://github.com/samber/cc-skills).
+
+<!-- prettier-ignore-start -->
 
 > [!IMPORTANT]
 > Bootstrapped with Claude Code by distilling my Go project commits. **Edited, tested, reviewed and reworked by a human**.
 >
 > **No AI slop here.** AI-made skills are useless.
+>
+> Built for Claude Code, Codex, Gemini, Copilot, Antigravity, Cursor...
+
+<!-- prettier-ignore-end -->
 
 <img width="1414" height="491" alt="image" src="https://github.com/user-attachments/assets/620b5835-c1ba-4ea9-bf47-2293b58b879e" />
 
@@ -101,13 +107,19 @@ OpenCode auto-discovers skills from `.agents/skills/`, `.opencode/skills/`, and 
 <details>
 <summary>Codex (OpenAI)</summary>
 
-Clone into the cross-client discovery path:
+Install the plugin via the Codex CLI:
 
 ```bash
-git clone https://github.com/samber/cc-skills-golang.git ~/.agents/skills/cc-skills-golang
+codex plugin add github:samber/cc-skills
 ```
 
-Codex auto-discovers skills from `~/.agents/skills/` and `.agents/skills/`. Update with `cd ~/.agents/skills/cc-skills-golang && git pull`.
+Update with `codex plugin update cc-skills`. Falls back to a manual clone if the marketplace path is unavailable:
+
+```bash
+git clone https://github.com/samber/cc-skills.git ~/.agents/skills/cc-skills
+```
+
+Codex auto-discovers skills from `~/.agents/skills/` and `.agents/skills/`.
 
 </details>
 
@@ -137,18 +149,18 @@ These skills are designed as **atomic, cross-referencing units**. A skill may re
                                             │
    ┌─────────────────┬──────────────────────┼──────────────────────┐
    ▼                 ▼                      ▼                      ▼
-┌──────────────┐ ┌──────────────┐ ┌─────────────────┐ ┌──────────────────┐
-│ Code Quality │ │ Arch & Design│ │    QA & Perf    │ │  Project Start   │
-├──────────────┤ ├──────────────┤ ├─────────────────┤ ├──────────────────┤
-│ code-style   │ │ design-patt  │ │ testing         │ │ project-layout   │
-│ naming       │ │ concurrency  │ │ benchmark       │ │ popular-libs     │
-│ error-handl  │ │ context      │ │ performance     │ │ cli              │
-│ safety       │ │ dep-inject   │ │ troubleshoot    │ │ CI               │
-│ structs-iface│ │ data-structs │ │ observability   │ │ stay-updated     │
-│ documentation│ │ database     │ │                 │ │ dep-management   │
-│ lint         │ │ modernize    │ │                 │ │                  │
-│ security     │ │              │ │                 │ │                  │
-└──────────────┘ └──────────────┘ └─────────────────┘ └──────────────────┘
+┌──────────────┐ ┌──────────────┐ ┌─────────────────┐ ┌──────────────────────┐
+│ Code Quality │ │ Arch & Design│ │    QA & Perf    │ │    Project Start     │
+├──────────────┤ ├──────────────┤ ├─────────────────┤ ├──────────────────────┤
+│ code-style   │ │ design-patt  │ │ testing         │ │ project-layout       │
+│ naming       │ │ concurrency  │ │ benchmark       │ │ popular-libs         │
+│ error-handl  │ │ context      │ │ performance     │ │ cli                  │
+│ safety       │ │ dep-inject   │ │ troubleshoot    │ │ continuous-integ.    │
+│ structs-iface│ │ data-structs │ │ observability   │ │ stay-updated         │
+│ documentation│ │ database     │ │                 │ │ dep-management       │
+│ lint         │ │ modernize    │ │                 │ │ gopls                │
+│ security     │ │ refactoring  │ │                 │ │ pkg-go-dev           │
+└──────────────┘ └──────────────┘ └─────────────────┘ └──────────────────────┘
 
     ┌─────────────────────────────────────────────────────────────────────────┐
     │                      Framework / Library Skills                         │
@@ -172,6 +184,7 @@ These skills are designed as **atomic, cross-referencing units**. A skill may re
 - ❌ To-do
 - ⚡ Command available
 - 🧠 Ultrathink automatically
+- 🤖 Ultracode automatically
 - ⚙️ Overridable (see doc below)
 - **Description (tok)**: weight of the `description` field from YAML frontmatter, always loaded into Claude's context for skill triggering
 - **SKILL.md (tok)**: weight of the full `SKILL.md` file loaded when the skill triggers
@@ -183,61 +196,64 @@ These skills are designed as **atomic, cross-referencing units**. A skill may re
 
 |  | Skill | Flags | Error rate gap | Description (tok) | SKILL.md (tok) | Directory (tok) |
 | --- | --- | --- | --- | --- | --- | --- |
-| ⭐️ | ✅ `golang-code-style` | ⚡ ⚙️ | -40% | 115 | 2,069 | 2,685 |
-| ⭐️ | ✅ `golang-data-structures` | ⚡ | -39% | 92 | 2,464 | 6,176 |
-| ⭐️ | ✅ `golang-database` | ⚡ ⚙️ | -38% | 97 | 2,725 | 7,248 |
-| ⭐️ | ✅ `golang-design-patterns` | ⚡ ⚙️ | -37% | 66 | 2,610 | 9,316 |
-| ⭐️ | ✅ `golang-documentation` | ⚡ ⚙️ | -53% | 73 | 2,678 | 10,549 |
-| ⭐️ | ✅ `golang-error-handling` | ⚡ ⚙️ | -26% | 139 | 1,520 | 4,394 |
-| ⭐️ | ✅ `golang-how-to` | ⚡ | — | 165 | 2,191 | 10,255 |
-| ⭐️ | ✅ `golang-modernize` | ⚡ | -61% | 68 | 2,476 | 7,599 |
-| ⭐️ | ✅ `golang-naming` | ⚡ ⚙️ | -23% | 158 | 2,865 | 7,233 |
-| ⭐️ | ✅ `golang-safety` | ⚡ | -58% | 78 | 2,457 | 5,227 |
-| ⭐️ | ✅ `golang-testing` | ⚡ 🧠 ⚙️ | -32% | 113 | 3,105 | 6,212 |
-| ⭐️ | ✅ `golang-troubleshooting` | ⚡ 🧠 | -32% | 126 | 2,735 | 15,901 |
-| ⭐️ | ✅ `golang-security` | ⚡ 🧠 | -32% | 84 | 2,873 | 20,894 |
-|  | ✅ `golang-benchmark` | ⚡ 🧠 | -50% | 99 | 2,135 | 29,248 |
-|  | ✅ `golang-cli` | ⚡ | -43% | 122 | 2,274 | 6,089 |
-|  | ✅ `golang-concurrency` | ⚡ ⚙️ | -39% | 71 | 1,873 | 6,338 |
-|  | ✅ `golang-context` | ⚡ ⚙️ | -34% | 80 | 1,144 | 3,940 |
-|  | ✅ `golang-continuous-integration` | ⚡ | -59% | 82 | 2,835 | 6,477 |
-|  | ✅ `golang-dependency-injection` | ⚡ ⚙️ | -47% | 176 | 2,842 | 5,113 |
-|  | ✅ `golang-dependency-management` | ⚡ | -54% | 77 | 1,877 | 4,957 |
-|  | ✅ `golang-structs-interfaces` | ⚡ ⚙️ | -35% | 110 | 2,999 | 2,999 |
-|  | ✅ `golang-lint` | ⚡ | -41% | 98 | 1,714 | 5,493 |
-|  | ✅ `golang-observability` | ⚡ ⚙️ | -37% | 161 | 2,921 | 18,453 |
-|  | ✅ `golang-performance` | ⚡ 🧠 | -39% | 127 | 1,953 | 17,855 |
-|  | ✅ `golang-popular-libraries` | ⚡ | -30% | 61 | 788 | 4,131 |
-|  | ✅ `golang-project-layout` | ⚡ | -38% | 69 | 1,510 | 5,718 |
-|  | ✅ `golang-stay-updated` | ⚡ | -56% | 43 | 1,916 | 1,916 |
+| ⭐️ | ✅ `golang-code-style` | ⚡ 🤖 ⚙️ | -40% | 114 | 2,358 | 2,974 |
+| ⭐️ | ✅ `golang-data-structures` | ⚡ | -39% | 93 | 2,608 | 6,327 |
+| ⭐️ | ✅ `golang-database` | ⚡ ⚙️ | -38% | 97 | 2,721 | 7,243 |
+| ⭐️ | ✅ `golang-design-patterns` | ⚡ ⚙️ | -37% | 80 | 2,694 | 9,400 |
+| ⭐️ | ✅ `golang-documentation` | ⚡ 🤖 ⚙️ | -53% | 75 | 3,163 | 11,876 |
+| ⭐️ | ✅ `golang-error-handling` | ⚡ 🤖 ⚙️ | -26% | 141 | 1,734 | 4,693 |
+| ⭐️ | ✅ `golang-how-to` | ⚡ | — | 184 | 4,210 | 17,583 |
+| ⭐️ | ✅ `golang-modernize` | ⚡ 🤖 | -43% | 104 | 3,486 | 15,145 |
+| ⭐️ | ✅ `golang-naming` | ⚡ ⚙️ | -23% | 159 | 3,031 | 7,399 |
+| ⭐️ | ✅ `golang-refactoring` | ⚡ 🧠 🤖 ⚙️ | — | 245 | 3,835 | 20,392 |
+| ⭐️ | ✅ `golang-safety` | ⚡ | -58% | 78 | 2,614 | 5,384 |
+| ⭐️ | ✅ `golang-testing` | ⚡ 🧠 🤖 ⚙️ | -32% | 115 | 4,270 | 8,822 |
+| ⭐️ | ✅ `golang-troubleshooting` | ⚡ 🧠 🤖 | -32% | 173 | 2,993 | 18,035 |
+| ⭐️ | ✅ `golang-security` | ⚡ 🧠 🤖 | -32% | 85 | 3,187 | 21,623 |
+|  | ✅ `golang-benchmark` | ⚡ 🧠 | -50% | 102 | 3,153 | 33,396 |
+|  | ✅ `golang-cli` | ⚡ | -43% | 125 | 2,338 | 6,153 |
+|  | ✅ `golang-concurrency` | ⚡ 🤖 ⚙️ | -39% | 72 | 2,196 | 6,826 |
+|  | ✅ `golang-context` | ⚡ ⚙️ | -34% | 82 | 1,211 | 4,021 |
+|  | ✅ `golang-continuous-integration` | ⚡ | -59% | 177 | 3,542 | 12,804 |
+|  | ✅ `golang-dependency-injection` | ⚡ 🤖 ⚙️ | -47% | 178 | 3,016 | 5,287 |
+|  | ✅ `golang-dependency-management` | ⚡ | -54% | 77 | 2,407 | 5,545 |
+|  | ✅ `golang-structs-interfaces` | ⚡ ⚙️ | -35% | 111 | 3,076 | 3,076 |
+|  | ✅ `golang-lint` | ⚡ 🤖 | -41% | 98 | 1,877 | 6,295 |
+|  | ✅ `golang-observability` | ⚡ 🤖 ⚙️ | -37% | 164 | 3,128 | 19,583 |
+|  | ✅ `golang-performance` | ⚡ 🧠 🤖 | -39% | 130 | 2,226 | 19,820 |
+|  | ✅ `golang-gopls` | ⚡ | — | 219 | 2,317 | 12,312 |
+|  | ✅ `golang-pkg-go-dev` | ⚡ | — | 170 | 3,442 | 5,386 |
+|  | ✅ `golang-popular-libraries` | ⚡ | -30% | 156 | 1,181 | 5,093 |
+|  | ✅ `golang-project-layout` | ⚡ | -38% | 105 | 1,761 | 6,257 |
+|  | ✅ `golang-stay-updated` | ⚡ | -56% | 44 | 1,802 | 1,802 |
 
 **Tools:**
 
 | Skill | Flags | Error rate gap | Description (tok) | SKILL.md (tok) | Directory (tok) |
 | --- | --- | --- | --- | --- | --- |
-| ✅ `golang-google-wire` | ⚡ | -16% | 122 | 2,511 | 7,243 |
-| ✅ `golang-graphql` |  | -16% | 76 | 2,935 | 7,766 |
-| ✅ `golang-grpc` | ⚡ | -41% | 69 | 2,149 | 4,965 |
-| ✅ `golang-spf13-cobra` | ⚡ | — | 176 | 2,455 | 7,218 |
-| ✅ `golang-spf13-viper` | ⚡ | — | 170 | 2,412 | 6,936 |
-| ✅ `golang-swagger` | ⚡ | — | 144 | 2,125 | 3,123 |
-| ✅ `golang-uber-dig` | ⚡ | -10% | 107 | 2,264 | 5,904 |
-| ✅ `golang-uber-fx` | ⚡ | -5% | 118 | 2,499 | 6,747 |
-| ✅ `golang-samber-do` | ⚡ | -81% | 71 | 1,746 | 3,269 |
-| ✅ `golang-samber-hot` | ⚡ | -54% | 118 | 1,843 | 7,273 |
-| ✅ `golang-samber-lo` | ⚡ | -40% | 165 | 2,410 | 10,031 |
-| ✅ `golang-samber-mo` | ⚡ 🧠 | -48% | 81 | 2,800 | 11,215 |
-| ✅ `golang-samber-oops` | ⚡ | -59% | 69 | 2,380 | 2,692 |
-| ✅ `golang-samber-ro` | ⚡ 🧠 | -50% | 152 | 2,845 | 11,136 |
-| ✅ `golang-samber-slog` | ⚡ | -19% | 118 | 2,588 | 9,234 |
+| ✅ `golang-google-wire` | ⚡ | -16% | 122 | 2,670 | 7,400 |
+| ✅ `golang-graphql` |  | -16% | 76 | 3,070 | 7,941 |
+| ✅ `golang-grpc` | ⚡ | -41% | 70 | 2,341 | 5,157 |
+| ✅ `golang-spf13-cobra` | ⚡ | — | 176 | 2,580 | 7,351 |
+| ✅ `golang-spf13-viper` | ⚡ | — | 170 | 2,551 | 7,098 |
+| ✅ `golang-swagger` | ⚡ | — | 144 | 2,342 | 3,347 |
+| ✅ `golang-uber-dig` | ⚡ | -10% | 107 | 2,585 | 6,257 |
+| ✅ `golang-uber-fx` | ⚡ | -5% | 118 | 2,825 | 7,060 |
+| ✅ `golang-samber-do` | ⚡ | -81% | 71 | 2,145 | 3,660 |
+| ✅ `golang-samber-hot` | ⚡ | -54% | 119 | 1,986 | 7,416 |
+| ✅ `golang-samber-lo` | ⚡ | -40% | 166 | 2,610 | 10,288 |
+| ✅ `golang-samber-mo` | ⚡ 🧠 | -48% | 82 | 2,967 | 11,382 |
+| ✅ `golang-samber-oops` | ⚡ | -59% | 70 | 2,544 | 2,856 |
+| ✅ `golang-samber-ro` | ⚡ 🧠 | -50% | 153 | 2,976 | 11,192 |
+| ✅ `golang-samber-slog` | ⚡ | -19% | 119 | 3,120 | 9,842 |
 | ❌ `golang-temporal` |  | — | 0 | 0 | 0 |
-| ✅ `golang-stretchr-testify` | ⚡ | -47% | 90 | 1,714 | 2,533 |
+| ✅ `golang-stretchr-testify` | ⚡ | -47% | 92 | 1,858 | 2,677 |
 
 ## 🧪 Skill evaluations
 
 |             | With Skill          | Without Skill       | Delta     |
 | ----------- | ------------------- | ------------------- | --------- |
-| **Overall** | **3315/3395 (98%)** | **1915/3395 (56%)** | **+41pp** |
+| **Overall** | **3348/3439 (97%)** | **1957/3439 (57%)** | **+40pp** |
 
 See [EVALUATIONS.md](./EVALUATIONS.md) for the full per-skill breakdown.
 
@@ -307,6 +323,10 @@ Idiomatic Go design patterns. Functional options, constructors, builder pattern,
 
 Modernize Go code to use recent language features. Range-over-int, min/max builtins, iterators, slices/maps/cmp/slog stdlib packages, testing patterns (t.Context, b.Loop, synctest), and tooling upgrades.
 
+#### `golang-refactoring`
+
+Safe, at-scale refactoring process for existing Go code. Coverage-adaptive safety net, tool-driven behavior-preserving transforms (gopls Rename/Inline/Extract, gofmt -r, eg, gopatch), the Fowler catalog mapped to Go, breaking import cycles, type-alias gradual code repair, and a human-in-the-loop workflow of staged PRs on a refactoring branch.
+
 ### QA & Performance
 
 #### `golang-benchmark`
@@ -342,6 +362,14 @@ CI/CD pipeline configuration for Go projects using GitHub Actions. Build, test, 
 #### `golang-dependency-management`
 
 Go module dependency strategies. go.mod conventions, versioning, replace directives, tool dependencies, and multi-module workspaces.
+
+#### `golang-gopls`
+
+Semantic code intelligence for your local build via `gopls`, the official Go language server. Go-to-definition, find references, call/implementation hierarchy, workspace symbol search, diagnostics, safe rename, and refactors (extract/inline/fill/rewrite). Reachable via gopls's own MCP server, Claude Code's native `LSP` tool, or the `gopls` CLI.
+
+#### `golang-pkg-go-dev`
+
+Go package and module exploration via `godig`, a pkg.go.dev API client (CLI + MCP server). Package docs, API references, symbols, code examples, versions, importers, licenses, and known vulnerabilities. Prefer over Context7 for Go packages.
 
 #### `golang-popular-libraries`
 

@@ -35,6 +35,7 @@
 | `golang-lint`                 | v1.0.0  | 51         | 96%        | 55%           | +41pp     | 1.75×     |                             |
 | `golang-grpc`                   | v1.0.0  | 55         | 96%        | 55%           | +42pp     | 1.75×     |                             |
 | `golang-cli`                    | v1.0.0  | 58         | 95%        | 52%           | +43pp     | 1.83×     |                             |
+| `golang-modernize`              | v1.5.0  | 120        | 97%        | 54%           | +43pp     | 1.78×     |                             |
 | `golang-dependency-injection`   | v1.0.0  | 55         | 98%        | 51%           | +47pp     | 1.92×     |                             |
 | `golang-stretchr-testify`       | v1.0.0  | 47         | 100%       | 53%           | +47pp     | 1.89×     |                             |
 | `golang-samber-mo`              | v1.0.0  | 108        | **88%**    | 40%           | +48pp     | 2.20×     | **Low with-skill score**    |
@@ -47,7 +48,6 @@
 | `golang-safety`                 | v1.0.0  | 151        | 99%        | 41%           | +58pp     | 2.41×     |                             |
 | `golang-continuous-integration` | v1.0.0  | 66         | 100%       | 41%           | +59pp     | 2.44×     |                             |
 | `golang-samber-oops`            | v1.0.0  | 52         | 94%        | 35%           | +60pp     | 2.69×     |                             |
-| `golang-modernize`              | v1.0.0  | 76         | 95%        | 34%           | +61pp     | 2.79×     |                             |
 | `golang-samber-slog`            | v1.0.0  | 62         | 92%        | **73%**       | +19pp     | 1.26×     | **Low delta, high without** |
 | `golang-samber-lo`              | v1.0.0  | 86         | 97%        | 57%           | +40pp     | 1.70×     |                             |
 | `golang-uber-fx`                | v1.0.0  | 21         | 100%       | **95%**       | +5pp      | 1.05×     | **Low delta, high without** |
@@ -55,7 +55,7 @@
 | `golang-google-wire`            | v1.0.0  | 50         | 98%        | **82%**       | +16pp     | 1.20×     | **Low delta, high without** |
 | `golang-graphql`                | v0.0.2  | 59         | 100%       | **83%**       | +17pp     | 1.20×     | **Low delta, high without** |
 | `golang-samber-do`              | v1.0.0  | 53         | 100%       | 19%           | +81pp     | 5.26×     |                             |
-| **Total (41 skills)**           |         | **3395**   | **98%**    | **56%**       | **+41pp** | **1.73×** |                             |
+| **Total (41 skills)**           |         | **3439**   | **97%**    | **57%**       | **+40pp** | **1.71×** |                             |
 
 ## `golang-naming` — v1.0.0
 
@@ -696,16 +696,18 @@
 
 </details>
 
-## `golang-modernize` — v1.0.0
+## `golang-modernize` — v1.5.0
 
-|             | With Skill      | Without Skill   | Delta     |
-| ----------- | --------------- | --------------- | --------- |
-| **Overall** | **72/76 (95%)** | **26/76 (34%)** | **+61pp** |
+|             | With Skill        | Without Skill    | Delta     |
+| ----------- | ----------------- | ----------------- | --------- |
+| **Overall** | **116/120 (97%)** | **65/120 (54%)** | **+43pp** |
+
+Evals 1–12 (72 assertions) are unchanged from the v1.0.0 run below. Evals 13 (extended from 2 to 4 assertions), 14–16, 18, and 19 (30 assertions total) were freshly re-run for the Go 1.27 content added in this update. Eval 17's with-skill run scored **4/5**; its without-skill run could not be captured after five subagent attempts across two runs (agents consistently returned an idle status with no answer content for this specific prompt) and is excluded from the pooled totals above — pending a re-run in a future update. Evals 20–23 (18 assertions) come from an independently authored, overlapping Go 1.27 eval pass (PR #98) merged into this update; they were run separately on a different model (Kimi K3) and are folded in here rather than duplicated as a second report. Evals 20–22 test similar ground to evals 15/16/18 respectively (uuid, generic methods, CutLast) from different code angles — kept alongside rather than deduplicated, since both authors' scenarios are independently useful and neither is redundant enough to discard outright.
 
 <details>
-<summary>Full breakdown (74 assertions)</summary>
+<summary>Full breakdown (125 assertions, 120 scored this run)</summary>
 
-**Model:** Claude Sonnet 4.6 | **Runs:** 12 adversarial evals × 2 configs = 24 subagents | **Grading:** Human-as-judge
+**Model:** Claude Sonnet 5 for evals 1–19 (evals 1–12 from the original Claude Sonnet 4.6 run, unchanged; evals 13–19 freshly run this update); Kimi K3 for evals 20–23 (from PR #98, folded in unchanged) | **Grading:** LLM-as-judge
 
 | #    | Assertion                                                                          | With                           | Without                                                     |
 | ---- | ---------------------------------------------------------------------------------- | ------------------------------ | ----------------------------------------------------------- |
@@ -795,8 +797,76 @@
 | 12.5 | Does NOT remove `ticker.Stop()` in PeriodicTask (needed for correctness)           | <span class="g">✓</span>       | <span class="g">✓</span>                                    |
 | 12.6 | Suggests `go fix ./...` for automated modernization                                | <span class="g">✓</span>       | <span class="r">✗</span>                                    |
 | 12.7 | Correctly distinguishes Stop for GC vs Stop for correctness                        | <span class="g">✓</span>       | <span class="g">✓</span>                                    |
+|      | **13. go126-errors-astype-enhanced-new** — errors.AsType + enhanced new() (Go 1.26) | **<span class="g">4/4</span>** | **<span class="r">0/4</span>**                              |
+| 13.1 | Uses `errors.AsType[*os.PathError](err)` instead of var+`errors.As`               | <span class="g">✓</span>       | <span class="r">✗</span> kept `var pathErr; errors.As(...)` |
+| 13.2 | Replaces `ptr[T]` helper with `new()` accepting an initial value                   | <span class="g">✓</span>       | <span class="r">✗</span> kept helper (exported as `Ptr`)    |
+| 13.3 | Applies the `errors.AsType` rewrite to all three branches, not just the first     | <span class="g">✓</span>       | <span class="r">✗</span> no branch rewritten                |
+| 13.4 | Correctly attributes both features to Go 1.26, not a newer/older release          | <span class="g">✓</span>       | <span class="r">✗</span> neither feature used or attributed |
+|      | **14. json-v2-duplicate-key-strictness** — Go 1.27 upgrade breaks duplicate-key decode | **<span class="g">6/6</span>** | **<span class="r">2/6</span>**                          |
+| 14.1 | Identifies Go 1.27 made `encoding/json/v2` the default underneath `encoding/json` | <span class="g">✓</span>       | <span class="r">✗</span> claims v1 behavior is guaranteed unaffected by Go 1's compatibility promise |
+| 14.2 | Explains duplicate keys are rejected by default (not merely an opt-in experiment) | <span class="g">✓</span>       | <span class="r">✗</span> frames rejection as conditional on an opt-in `GOEXPERIMENT=jsonv2` |
+| 14.3 | Connects the partner payload's duplicate `id` key to the reported failures        | <span class="g">✓</span>       | <span class="g">✓</span> reasoned to the same hypothesis, framed as unconfirmed |
+| 14.4 | Proposes a concrete fix (dedupe before decode, or an explicit v1-compatible opt-in) | <span class="g">✓</span>       | <span class="g">✓</span> also proposes `json.RejectDuplicateNames(false)` |
+| 14.5 | Names `GOEXPERIMENT=nojsonv2` as the escape hatch, not the long-term fix           | <span class="g">✓</span>       | <span class="r">✗</span> never names `nojsonv2`              |
+| 14.6 | Does NOT claim `encoding/json`'s decode behavior is unaffected by the Go 1.27 bump | <span class="g">✓</span>       | <span class="r">✗</span> explicitly claims it can't change under Go 1's compatibility promise |
+|      | **15. generic-method-scoped-transform** — Set[T] → Set[U] via a Go 1.27 generic method | **<span class="r">1/5</span>** | **<span class="r">1/5</span>**                          |
+| 15.1 | Declares the transform as a method on `Set[T]`, not a package-level generic function | <span class="r">✗</span> refused the rule, wrote a free function | <span class="r">✗</span> free function |
+| 15.2 | The new type parameter is declared on the method, not the `Set[T]` type            | <span class="r">✗</span> no method written              | <span class="r">✗</span> no method written                    |
+| 15.3 | Notes generic methods (own type parameters) are a Go 1.27 addition                | <span class="r">✗</span> explicitly asserts this is false | <span class="r">✗</span> not mentioned                       |
+| 15.4 | Notes interface methods still can't declare type parameters / can't be satisfied  | <span class="r">✗</span>                                | <span class="r">✗</span>                                      |
+| 15.5 | Example call site compiles conceptually                                           | <span class="g">✓</span>       | <span class="g">✓</span>                                    |
+|      | **16. cutlast-final-separator-split** — split on the last colon only               | **<span class="g">5/5</span>** | **<span class="r">1/5</span>**                              |
+| 16.1 | Uses `strings.CutLast(line, ":")`                                                 | <span class="g">✓</span>       | <span class="r">✗</span> uses `LastIndex` + manual slicing   |
+| 16.2 | Returns `CutLast`'s `found` boolean directly as `ok`                              | <span class="g">✓</span>       | <span class="r">✗</span> derives `ok` from `idx == -1`        |
+| 16.3 | Does NOT use `LastIndex` with manual slice arithmetic                             | <span class="g">✓</span>       | <span class="r">✗</span> uses `line[:idx], line[idx+1:]`      |
+| 16.4 | Does NOT use `Split`/`SplitN`                                                     | <span class="g">✓</span>       | <span class="g">✓</span>                                    |
+| 16.5 | Notes `CutLast` requires Go 1.27+                                                 | <span class="g">✓</span>       | <span class="r">✗</span> no version note                     |
+|      | **17. godebug-removed-key-build-break** — bump toolchain with a stale `godebug` pin | **<span class="g">4/5</span>** | **not measured** ⁽¹⁾                                        |
+| 17.1 | Removes/updates the `asynctimerchan=0` entry rather than leaving it unchanged      | <span class="g">✓</span>       | —                                                             |
+| 17.2 | Explains Go 1.27 removed the key and a stale pin now fails the build (not a warning) | <span class="g">✓</span>     | —                                                             |
+| 17.3 | Bumps the `go` directive to a current Go 1.27-era version                          | <span class="g">✓</span>       | —                                                             |
+| 17.4 | Recommends fixing the underlying timer-dependent code, not silently deleting the shim | <span class="g">✓</span>    | —                                                             |
+| 17.5 | Mentions checking for other Go 1.27-removed GODEBUG keys in the same upgrade      | <span class="r">✗</span>       | —                                                             |
+|      | **18. uuid-stdlib-vs-dependency** — generate order IDs with no UUID dep in go.mod  | **<span class="g">5/5</span>** | **<span class="r">3/5</span>**                              |
+| 18.1 | Uses the stdlib `uuid` package rather than `google/uuid`/`gofrs/uuid`             | <span class="g">✓</span>       | <span class="r">✗</span> hand-rolled UUIDv4 via `crypto/rand` |
+| 18.2 | Does NOT add a new external module dependency                                     | <span class="g">✓</span>       | <span class="g">✓</span> avoided a dependency, but by hand-rolling instead of using stdlib |
+| 18.3 | Notes the stdlib `uuid` package is new in Go 1.27                                 | <span class="g">✓</span>       | <span class="r">✗</span> unaware the package exists           |
+| 18.4 | Stores the ID via `UUID.String()` or an equivalent formatted string                | <span class="g">✓</span>       | <span class="g">✓</span> `fmt.Sprintf` RFC 4122 formatting    |
+| 18.5 | Does NOT claim the stdlib `uuid` package existed before Go 1.27                   | <span class="g">✓</span>       | <span class="g">✓</span> (never mentions it)                  |
+|      | **19. json-v2-streaming-migration** — add a reader-based JSON loader              | **<span class="g">5/5</span>** | **<span class="r">3/5</span>**                              |
+| 19.1 | Uses `encoding/json/v2`'s `UnmarshalRead(r, v)` rather than only `NewDecoder(r).Decode(v)` | <span class="g">✓</span> | <span class="r">✗</span> uses v1-era `json.NewDecoder(r).Decode(v)` |
+| 19.2 | Notes `encoding/json/v2` is the new default as of Go 1.27                         | <span class="g">✓</span>       | <span class="r">✗</span> no version note                     |
+| 19.3 | Does NOT introduce a manual `io.ReadAll` + `Unmarshal` buffering step             | <span class="g">✓</span>       | <span class="g">✓</span>                                    |
+| 19.4 | Keeps `LoadFromBytes` working as-is                                               | <span class="g">✓</span>       | <span class="g">✓</span>                                    |
+| 19.5 | Signature matches `LoadFromReader(r io.Reader, v any) error`                      | <span class="g">✓</span>       | <span class="g">✓</span>                                    |
+|      | **20. go127-stdlib-uuid** — stdlib uuid replaces github.com/google/uuid (from PR #98) | **<span class="g">5/5</span>** | **<span class="r">1/5</span>**                           |
+| 20.1 | Replaces `github.com/google/uuid` with stdlib `uuid`                             | <span class="g">✓</span>       | <span class="r">✗</span> claims no stdlib uuid; hand-rolls       |
+| 20.2 | Uses `uuid.New().String()` — no `uuid.NewString()`                               | <span class="g">✓</span>       | <span class="r">✗</span> no stdlib uuid usage at all             |
+| 20.3 | Knows generators return values without errors                                    | <span class="g">✓</span>       | <span class="r">✗</span> keeps `(string, error)` error branch    |
+| 20.4 | Uses `uuid.NewV7()` for time-ordered DB ID                                       | <span class="g">✓</span>       | <span class="r">✗</span> hand-rolled v7 bit layout               |
+| 20.5 | Removes `github.com/google/uuid` from go.mod                                     | <span class="g">✓</span>       | <span class="g">✓</span>                                         |
+|      | **21. go127-generic-methods** — generic methods with own type parameters, interface-satisfaction test (from PR #98) | **<span class="g">4/4</span>** | **<span class="r">1/4</span>** |
+| 21.1 | Converts `MapSet` to generic method (own type param)                             | <span class="g">✓</span>       | <span class="r">✗</span> `Map` kept package-level                |
+| 21.2 | Converts `FilterSet` to a method on `*Set[T]`                                    | <span class="g">✓</span>       | <span class="g">✓</span>                                         |
+| 21.3 | Does NOT claim generic methods are impossible                                    | <span class="g">✓</span>       | <span class="r">✗</span> claims methods can't declare type params |
+| 21.4 | Keeps `ForEach` non-generic to satisfy the interface                             | <span class="g">✓</span>       | <span class="r">✗</span> drops `ForEach`/`Iteratable` entirely   |
+|      | **22. go127-cutlast** — strings.CutLast for last-separator splits, 3 call sites (from PR #98) | **<span class="g">4/4</span>** | **<span class="r">1/4</span>** |
+| 22.1 | Uses `strings.CutLast` for at least one function                                 | <span class="g">✓</span>       | <span class="r">✗</span> claims "no `strings.CutLast` exists"    |
+| 22.2 | Uses the 3-result form (before, after, found) correctly                          | <span class="g">✓</span>       | <span class="r">✗</span> no `CutLast` usage at all               |
+| 22.3 | Uses `CutLast` in `EnvValue` to simplify the ok-returning split                  | <span class="g">✓</span>       | <span class="r">✗</span> uses `strings.Cut`, changes semantics   |
+| 22.4 | Does NOT keep manual `LastIndex` slicing where `CutLast` applies                 | <span class="g">✓</span>       | <span class="g">✓</span>                                         |
+|      | **23. go127-synctest-http** — httptest.NewTestServer inside synctest bubbles (from PR #98) | **<span class="g">5/5</span>** | **<span class="r">1/5</span>** |
+| 23.1 | Wraps tests in `synctest.Test`                                                   | <span class="g">✓</span>       | <span class="g">✓</span>                                         |
+| 23.2 | Uses `httptest.NewTestServer` instead of `httptest.NewServer`                    | <span class="g">✓</span>       | <span class="r">✗</span> uses `httptest.NewServer` in both tests |
+| 23.3 | Explains real-network servers don't work in a synctest bubble                    | <span class="g">✓</span>       | <span class="r">✗</span> falsely claims `NewServer` bubble-aware |
+| 23.4 | Does NOT leave a plain `httptest.NewServer` inside a bubble                      | <span class="g">✓</span>       | <span class="r">✗</span> `NewServer` left inside bubble          |
+| 23.5 | Keeps both tests working with deterministic time                                 | <span class="g">✓</span>       | <span class="r">✗</span> real-socket server, non-deterministic   |
+
+⁽¹⁾ Eval 17's without-skill condition returned no answer content after five subagent attempts (across two separate agent identities); this is a tooling/relay issue observed only on this specific prompt, not a fabricated or assumed score. Re-run before the next report update.
 
 </details>
+
+**Finding — eval 15 (generic methods) shows zero uplift and needs a skill fix, not a re-run.** Both conditions scored 1/5, and the with-skill agent explicitly rejected the rule as false ("Go methods cannot declare their own type parameters ... not something Go 1.27 relaxed") before reverting to a pre-1.27 answer. The rule itself is correct — verified directly against the Go 1.27 release notes (`/issue/77273`, `/ref/spec#Method_declarations`) — but a model whose training predates Go 1.27 treats a surprising claim inside an "internal skill guide excerpt" as untrustworthy and overrides it with its prior. The skill's `versions.md` now cites the Go issue number and spec section inline (fixed in this update) rather than just asserting the rule, so the model has a concrete reference to check itself against rather than a bare claim to accept or doubt. Eval 21 (from PR #98, a different model, a different code scenario) independently reproduced the same failure mode — corroborating evidence, not a fluke of one eval design.
 
 ## `golang-security` — v1.0.0
 
